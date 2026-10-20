@@ -1,0 +1,34 @@
+{
+	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
+	"meta": {
+		"title": "Template Usage Column demo",
+		"author": "aryanjasala"
+	},
+	"landingPage": "/wp-admin/edit.php?post_type=page",
+	"preferredVersions": {
+		"php": "8.3",
+		"wp": "latest"
+	},
+	"features": {
+		"networking": true
+	},
+	"login": true,
+	"steps": [
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "git:directory",
+				"url": "https://github.com/aryanjasala/template-usage-column",
+				"ref": "main"
+			},
+			"options": {
+				"activate": true,
+				"targetFolderName": "template-usage-column"
+			}
+		},
+		{
+			"step": "runPHP",
+			"code": "<?php require_once '/wordpress/wp-load.php'; foreach ( array( array( 'Home', '' ), array( 'About us', 'page-no-title' ), array( 'Contact', '' ), array( 'Pricing', 'page-no-title' ), array( 'Spring sale landing', 'templates/landing.php' ), array( 'Webinar signup', 'templates/landing.php' ) ) as $page ) { $id = wp_insert_post( array( 'post_type' => 'page', 'post_status' => 'publish', 'post_title' => $page[0] ) ); if ( $page[1] ) { update_post_meta( $id, '_wp_page_template', $page[1] ); } }"
+		}
+	]
+}
