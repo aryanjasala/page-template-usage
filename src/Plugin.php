@@ -64,6 +64,7 @@ final class Plugin {
 	private function __construct() {
 		$this->templates = new Templates();
 		$this->services  = array(
+			$this->templates,
 			new ListColumn( $this->templates ),
 			new ReportPage( $this->templates ),
 		);

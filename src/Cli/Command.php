@@ -103,12 +103,12 @@ final class Command {
 	public function reassign( array $args, array $assoc_args ): void {
 		list( $from, $to ) = $args;
 		$from              = 'missing' === $from ? Templates::MISSING : $from;
-		$moved             = $this->templates->reassign( $assoc_args['post_type'] ?? 'page', $from, $to );
+		$result            = $this->templates->reassign( $assoc_args['post_type'] ?? 'page', $from, $to );
 
-		if ( is_wp_error( $moved ) ) {
-			\WP_CLI::error( $moved->get_error_message() );
+		if ( is_wp_error( $result ) ) {
+			\WP_CLI::error( $result->get_error_message() );
 		}
 
-		\WP_CLI::success( sprintf( 'Moved %d item(s) to %s.', $moved, $to ) );
+		\WP_CLI::success( sprintf( 'Moved %d item(s) to %s.', $result['moved'], $to ) );
 	}
 }

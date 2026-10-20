@@ -48,13 +48,34 @@ final class ReportPage implements Service {
 	}
 
 	/**
+	 * Most posts one click in wp-admin moves. WP-CLI has no limit.
+	 */
+	private const MOVE_LIMIT = 500;
+
+	/**
+	 * Capability needed to open Appearance > Template Usage.
+	 *
+	 * Moving posts also needs edit_posts on the post type, and edit_post on each post.
+	 *
+	 * @return string
+	 */
+	public static function capability(): string {
+		/**
+		 * Filters the capability needed to open Appearance > Template Usage.
+		 *
+		 * @param string $capability Default edit_pages.
+		 */
+		return (string) apply_filters( 'template_usage_column_capability', 'edit_pages' );
+	}
+
+	/**
 	 * Registers Appearance > Template Usage.
 	 */
 	public function add_page(): void {
 		$hook = add_theme_page(
 			__( 'Template Usage', 'template-usage-column' ),
 			__( 'Template Usage', 'template-usage-column' ),
-			'edit_pages',
+			self::capability(),
 			self::SLUG,
 			array( $this, 'render' )
 		);
@@ -104,7 +125,7 @@ final class ReportPage implements Service {
 	private function render_post_type( \WP_Post_Type $post_type ): void {
 		$rows        = $this->templates->get_report( $post_type->name );
 		$templates   = $this->templates->get_templates( $post_type->name );
-		$can_edit    = current_user_can( $post_type->cap->edit_others_posts );
+		$can_edit    = current_user_can( $post_type->cap->edit_posts );
 		$list_column = new ListColumn( $this->templates );
 		$unused      = count( wp_list_filter( $rows, array( 'status' => 'unused' ) ) );
 		$missing     = array_sum( wp_list_pluck( wp_list_filter( $rows, array( 'status' => 'missing' ) ), 'count' ) );
@@ -119,15 +140,22 @@ final class ReportPage implements Service {
 			<h2 id="tuc-<?php echo esc_attr( $post_type->name ); ?>"><?php echo esc_html( $post_type->labels->name ); ?></h2>
 
 			<ul class="tuc-stats">
-				<li><?php $this->stat( count( $templates ), _n( 'template', 'templates', count( $templates ), 'template-usage-column' ) ); ?></li>
-				<li class="<?php echo $unused ? 'is-notice' : ''; ?>"><?php $this->stat( $unused, __( 'unused', 'template-usage-column' ) ); ?></li>
+				<?php /* translators: %s: number of templates. */ ?>
+				<li><?php $this->stat( count( $templates ), _n( '%s template', '%s templates', count( $templates ), 'template-usage-column' ) ); ?></li>
+				<?php /* translators: %s: number of unused templates. */ ?>
+				<li class="<?php echo $unused ? 'is-notice' : ''; ?>"><?php $this->stat( $unused, _n( '%s unused', '%s unused', $unused, 'template-usage-column' ) ); ?></li>
 				<li class="<?php echo $missing ? 'is-error' : ''; ?>">
 					<?php
-					$this->stat(
-						$missing,
-						/* translators: %s: post type name, e.g. "pages". */
-						sprintf( __( '%s on missing templates', 'template-usage-column' ), strtolower( 1 === $missing ? $post_type->labels->singular_name : $post_type->labels->name ) )
-					);
+					if ( 'page' === $post_type->name ) {
+						/* translators: %s: number of pages. */
+						$this->stat( $missing, _n( '%s page on missing templates', '%s pages on missing templates', $missing, 'template-usage-column' ) );
+					} elseif ( 'post' === $post_type->name ) {
+						/* translators: %s: number of posts. */
+						$this->stat( $missing, _n( '%s post on missing templates', '%s posts on missing templates', $missing, 'template-usage-column' ) );
+					} else {
+						/* translators: %s: number of items. */
+						$this->stat( $missing, _n( '%s item on missing templates', '%s items on missing templates', $missing, 'template-usage-column' ) );
+					}
 					?>
 				</li>
 			</ul>
@@ -179,10 +207,11 @@ final class ReportPage implements Service {
 	 * Prints one summary number with its label.
 	 *
 	 * @param int    $number Number.
-	 * @param string $label  What it counts.
+	 * @param string $format Translated text with %s where the number goes.
 	 */
-	private function stat( int $number, string $label ): void {
-		printf( '<strong>%s</strong> %s', esc_html( number_format_i18n( $number ) ), esc_html( $label ) );
+	private function stat( int $number, string $format ): void {
+		// The number goes inside the translated sentence, wrapped in <strong>.
+		echo wp_kses( sprintf( esc_html( $format ), '<strong>' . esc_html( number_format_i18n( $number ) ) . '</strong>' ), array( 'strong' => array() ) );
 	}
 
 	/**
@@ -202,13 +231,14 @@ final class ReportPage implements Service {
 			<input type="hidden" name="action" value="<?php echo esc_attr( self::ACTION ); ?>">
 			<input type="hidden" name="post_type" value="<?php echo esc_attr( $post_type ); ?>">
 			<input type="hidden" name="from" value="<?php echo esc_attr( $from ); ?>">
-			<label class="screen-reader-text" for="<?php echo esc_attr( $field_id ); ?>"><?php esc_html_e( 'New template', 'template-usage-column' ); ?></label>
+			<?php /* translators: %s: template name or file. */ ?>
+			<label class="screen-reader-text" for="<?php echo esc_attr( $field_id ); ?>"><?php echo esc_html( sprintf( __( 'New template for everything on %s', 'template-usage-column' ), $this->templates->get_name( $post_type, $from ) ?? $from ) ); ?></label>
 			<select name="to" id="<?php echo esc_attr( $field_id ); ?>">
 				<?php foreach ( $targets as $slug => $name ) : ?>
 					<option value="<?php echo esc_attr( (string) $slug ); ?>"><?php echo esc_html( $name ); ?></option>
 				<?php endforeach; ?>
 			</select>
-			<button type="submit" class="button"><?php esc_html_e( 'Move', 'template-usage-column' ); ?></button>
+			<button type="submit" class="button" aria-describedby="<?php echo esc_attr( $field_id ); ?>"><?php esc_html_e( 'Move', 'template-usage-column' ); ?></button>
 		</form>
 		<?php
 	}
@@ -219,7 +249,12 @@ final class ReportPage implements Service {
 	private function render_notice(): void {
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Display-only values set by our own redirect.
 		if ( isset( $_GET['tuc_error'] ) ) {
-			printf( '<div class="notice notice-error"><p>%s</p></div>', esc_html( sanitize_text_field( wp_unslash( $_GET['tuc_error'] ) ) ) );
+			// Only known codes, so a crafted link cannot put its own text in a notice.
+			$errors = array(
+				'unknown_template' => __( 'The theme does not have that template.', 'template-usage-column' ),
+			);
+			$code   = sanitize_key( wp_unslash( $_GET['tuc_error'] ) );
+			printf( '<div class="notice notice-error"><p>%s</p></div>', esc_html( $errors[ $code ] ?? __( 'The templates could not be changed.', 'template-usage-column' ) ) );
 			return;
 		}
 
@@ -227,21 +262,31 @@ final class ReportPage implements Service {
 			return;
 		}
 
-		$moved = absint( $_GET['tuc_moved'] );
-		$to    = isset( $_GET['tuc_to'] ) ? sanitize_text_field( wp_unslash( $_GET['tuc_to'] ) ) : '';
+		$moved   = absint( $_GET['tuc_moved'] );
+		$left    = isset( $_GET['tuc_left'] ) ? absint( $_GET['tuc_left'] ) : 0;
+		$skipped = isset( $_GET['tuc_skipped'] ) ? absint( $_GET['tuc_skipped'] ) : 0;
+		$type    = isset( $_GET['tuc_type'] ) ? sanitize_key( wp_unslash( $_GET['tuc_type'] ) ) : 'page';
+		$to      = isset( $_GET['tuc_to'] ) ? sanitize_text_field( wp_unslash( $_GET['tuc_to'] ) ) : '';
 		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
-		printf(
-			'<div class="notice notice-success is-dismissible"><p>%s</p></div>',
-			esc_html(
-				sprintf(
-					/* translators: 1: number of items, 2: template name. */
-					_n( 'Moved %1$d item to "%2$s".', 'Moved %1$d items to "%2$s".', $moved, 'template-usage-column' ),
-					$moved,
-					$to
-				)
-			)
+		$lines = array(
+			sprintf(
+				/* translators: 1: number of items, 2: template name. */
+				_n( 'Moved %1$s item to "%2$s".', 'Moved %1$s items to "%2$s".', $moved, 'template-usage-column' ),
+				number_format_i18n( $moved ),
+				(string) ( $this->templates->get_name( $type, $to ) ?? $to )
+			),
 		);
+		if ( $skipped ) {
+			/* translators: %s: number of items. */
+			$lines[] = sprintf( _n( 'Skipped %s item you are not allowed to edit.', 'Skipped %s items you are not allowed to edit.', $skipped, 'template-usage-column' ), number_format_i18n( $skipped ) );
+		}
+		if ( $left ) {
+			/* translators: %s: number of items. */
+			$lines[] = sprintf( _n( '%s more is left. Click Move again, or run wp template-usage reassign for all of them at once.', '%s more are left. Click Move again, or run wp template-usage reassign for all of them at once.', $left, 'template-usage-column' ), number_format_i18n( $left ) );
+		}
+
+		printf( '<div class="notice notice-success is-dismissible"><p>%s</p></div>', esc_html( implode( ' ', $lines ) ) );
 	}
 
 	/**
@@ -256,22 +301,25 @@ final class ReportPage implements Service {
 		$object    = get_post_type_object( $post_type );
 		$back      = admin_url( 'themes.php?page=' . self::SLUG );
 
-		if ( ! $object || ! current_user_can( $object->cap->edit_others_posts ) ) {
+		if ( ! $object || ! current_user_can( self::capability() ) || ! current_user_can( $object->cap->edit_posts ) ) {
 			wp_die( esc_html__( 'Sorry, you are not allowed to change templates for these items.', 'template-usage-column' ), 403 );
 		}
 
-		$moved = $this->templates->reassign( $post_type, $from, $to );
+		$result = $this->templates->reassign( $post_type, $from, $to, self::MOVE_LIMIT, true );
 
-		if ( is_wp_error( $moved ) ) {
-			wp_safe_redirect( add_query_arg( 'tuc_error', rawurlencode( $moved->get_error_message() ), $back ) );
+		if ( is_wp_error( $result ) ) {
+			wp_safe_redirect( add_query_arg( 'tuc_error', 'unknown_template', $back ) );
 			exit;
 		}
 
 		wp_safe_redirect(
 			add_query_arg(
 				array(
-					'tuc_moved' => $moved,
-					'tuc_to'    => rawurlencode( (string) $this->templates->get_name( $post_type, $to ) ),
+					'tuc_moved'   => $result['moved'],
+					'tuc_skipped' => $result['skipped'],
+					'tuc_left'    => $result['remaining'],
+					'tuc_type'    => $post_type,
+					'tuc_to'      => rawurlencode( $to ),
 				),
 				$back
 			)

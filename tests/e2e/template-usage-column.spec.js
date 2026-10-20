@@ -1,4 +1,4 @@
-const { test, expect, wp } = require( './utils' );
+const { test, expect, wp, wpEval } = require( './utils' );
 
 // Twenty Twenty-Five (set in global setup) offers one page template: "Page No Title" (page-no-title).
 const NO_TITLE = 'page-no-title';
@@ -97,6 +97,52 @@ test.describe( 'Template Usage Column', () => {
 		await expect( page.locator( '.notice-success' ) ).toContainText( 'Moved 1 item to "Page No Title"' );
 		await expect( page.locator( `tr[data-template="${ GONE }"]` ) ).toHaveCount( 0 );
 		expect( wp( 'post', 'meta', 'get', String( ids.gone ), '_wp_page_template' ) ).toBe( NO_TITLE );
+	} );
+
+	test( 'one click moves at most 500 pages, and says how many are left', async ( { page } ) => {
+		test.setTimeout( 180_000 );
+		const ids = JSON.parse(
+			wpEval( `
+				global $wpdb;
+				$now = current_time( 'mysql', true );
+				$ids = array();
+				for ( $batch = 0; $batch < 4; $batch++ ) {
+					$rows = array();
+					for ( $i = 0; $i < 155; $i++ ) {
+						$rows[] = $wpdb->prepare( "( %s, %s, %s, 'publish', 'page', '', '', '', '' )", 'Bulk landing ' . ( $batch * 155 + $i ), $now, $now );
+					}
+					$wpdb->query( "INSERT INTO {$wpdb->posts} ( post_title, post_date, post_date_gmt, post_status, post_type, post_content, post_excerpt, to_ping, pinged ) VALUES " . implode( ',', $rows ) );
+					$first = (int) $wpdb->insert_id;
+					$meta  = array();
+					for ( $i = 0; $i < 155; $i++ ) {
+						$ids[]  = $first + $i;
+						$meta[] = $wpdb->prepare( '( %d, %s, %s )', $first + $i, '_wp_page_template', 'templates/bulk-gone.php' );
+					}
+					$wpdb->query( "INSERT INTO {$wpdb->postmeta} ( post_id, meta_key, meta_value ) VALUES " . implode( ',', $meta ) );
+				}
+				wp_cache_flush();
+				echo wp_json_encode( $ids );
+			` )
+		);
+
+		await page.goto( '/wp-admin/themes.php?page=template-usage' );
+		const section = page.locator( '.tuc-report__section', { has: page.getByRole( 'heading', { name: 'Pages' } ) } );
+		const row = section.locator( 'tr[data-template="templates/bulk-gone.php"]' );
+		await expect( row ).toContainText( '620' );
+		await row.locator( 'select[name="to"]' ).selectOption( NO_TITLE );
+		await row.getByRole( 'button', { name: 'Move' } ).click();
+		await expect( page.locator( '.notice-success' ) ).toContainText( 'Moved 500 items to "Page No Title".' );
+		await expect( page.locator( '.notice-success' ) ).toContainText( '120 more are left.' );
+
+		// The report updates at once: the counts cache is cleared when templates change.
+		await expect( row ).toContainText( '120' );
+		await row.locator( 'select[name="to"]' ).selectOption( NO_TITLE );
+		await row.getByRole( 'button', { name: 'Move' } ).click();
+		await expect( page.locator( '.notice-success' ) ).toContainText( 'Moved 120 items' );
+		await expect( page.locator( '.notice-success' ) ).not.toContainText( 'left' );
+		await expect( section.locator( 'tr[data-template="templates/bulk-gone.php"]' ) ).toHaveCount( 0 );
+
+		wpEval( `foreach ( ${ JSON.stringify( ids ) } as $id ) { wp_delete_post( $id, true ); }` );
 	} );
 
 	test( 'WP-CLI lists usage and reassigns', () => {
