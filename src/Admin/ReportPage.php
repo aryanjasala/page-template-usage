@@ -53,6 +53,22 @@ final class ReportPage implements Service {
 	private const MOVE_LIMIT = 500;
 
 	/**
+	 * Items one move handles, from the screen or an ability.
+	 *
+	 * @param string $post_type Post type being moved.
+	 * @return int
+	 */
+	public static function move_limit( string $post_type ): int {
+		/**
+		 * Filters how many items one Move click, or one reassign ability run, handles.
+		 *
+		 * @param int    $limit     Default 500.
+		 * @param string $post_type Post type being moved.
+		 */
+		return max( 1, (int) apply_filters( 'template_usage_column_move_limit', self::MOVE_LIMIT, $post_type ) );
+	}
+
+	/**
 	 * Capability needed to open Appearance > Template Usage.
 	 *
 	 * Moving posts also needs edit_posts on the post type, and edit_post on each post.
@@ -305,14 +321,7 @@ final class ReportPage implements Service {
 			wp_die( esc_html__( 'Sorry, you are not allowed to change templates for these items.', 'template-usage-column' ), 403 );
 		}
 
-		/**
-		 * Filters how many items one Move click handles.
-		 *
-		 * @param int    $limit     Default 500.
-		 * @param string $post_type Post type being moved.
-		 */
-		$limit  = max( 1, (int) apply_filters( 'template_usage_column_move_limit', self::MOVE_LIMIT, $post_type ) );
-		$result = $this->templates->reassign( $post_type, $from, $to, $limit, true );
+		$result = $this->templates->reassign( $post_type, $from, $to, self::move_limit( $post_type ), true );
 
 		if ( is_wp_error( $result ) ) {
 			wp_safe_redirect( add_query_arg( 'tuc_error', 'unknown_template', $back ) );

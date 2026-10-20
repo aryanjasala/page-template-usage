@@ -67,6 +67,7 @@ final class Plugin {
 			$this->templates,
 			new ListColumn( $this->templates ),
 			new ReportPage( $this->templates ),
+			new Abilities( $this->templates ),
 		);
 	}
 

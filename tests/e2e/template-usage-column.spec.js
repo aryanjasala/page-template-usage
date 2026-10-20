@@ -145,6 +145,28 @@ test.describe( 'Template Usage Column', () => {
 		wpEval( `foreach ( ${ JSON.stringify( ids ) } as $id ) { wp_delete_post( $id, true ); }` );
 	} );
 
+	test( 'abilities: an agent can read the report and move items off a missing template', async ( { rest } ) => {
+		wp( 'post', 'meta', 'update', String( ids.gone ), '_wp_page_template', GONE );
+		const path = ( name ) => `/wp-abilities/v1/abilities/template-usage-column/${ name }/run`;
+
+		const listed = await rest( 'GET', '/wp-abilities/v1/abilities?category=template-usage-column' );
+		expect( listed.body.map( ( ability ) => ability.name ).sort() ).toEqual( [ 'template-usage-column/get-report', 'template-usage-column/reassign' ] );
+
+		const report = await rest( 'GET', path( 'get-report' ) );
+		expect( report.status ).toBe( 200 );
+		expect( report.body ).toMatchObject( { post_type: 'page', missing: 1 } );
+		expect( report.body.templates.find( ( row ) => row.slug === GONE ) ).toMatchObject( { status: 'missing', count: 1 } );
+
+		const moved = await rest( 'POST', path( 'reassign' ), { input: { from: 'missing', to: NO_TITLE } } );
+		expect( moved.status ).toBe( 200 );
+		expect( moved.body ).toEqual( { moved: 1, skipped: 0, remaining: 0 } );
+		expect( wp( 'post', 'meta', 'get', String( ids.gone ), '_wp_page_template' ) ).toBe( NO_TITLE );
+		expect( ( await rest( 'GET', path( 'get-report' ) ) ).body.missing ).toBe( 0 );
+
+		const unknown = await rest( 'GET', `${ path( 'get-report' ) }?input[post_type]=nope` );
+		expect( unknown.body.code ).toBe( 'template_usage_no_templates' );
+	} );
+
 	test( 'WP-CLI lists usage and reassigns', () => {
 		wp( 'post', 'meta', 'update', String( ids.gone ), '_wp_page_template', GONE );
 

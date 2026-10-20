@@ -30,6 +30,15 @@ The Move button on Appearance > Template Usage moves at most 500 items per click
 
 The templates themselves come from core, so the core `theme_{$post_type}_templates` filter adds or removes them everywhere, including in this plugin.
 
+## Abilities
+
+On WordPress 6.9 and later, Template Usage Column registers [abilities](https://developer.wordpress.org/apis/abilities/), which AI agents find and run through the [MCP adapter](https://github.com/WordPress/mcp-adapter) and anything else through the REST API under `/wp-abilities/v1/`. Handy after a theme switch.
+
+| Ability | Does | Needs |
+| --- | --- | --- |
+| `template-usage-column/get-report` | Read-only. Every template for `post_type` (default `page`) with how many items use it, and the number on missing templates | the Template Usage capability |
+| `template-usage-column/reassign` | Moves items from `from` (a template, `default` or `missing`) to `to`, at most 500 per run, skipping items the user cannot edit. Returns `moved`, `skipped` and `remaining` | the Template Usage capability and `edit_posts` on the post type |
+
 ## PHP API
 
 ```php
