@@ -2,10 +2,10 @@
 /**
  * Base class for unit tests.
  *
- * @package AryanX\TemplateUsageColumn
+ * @package AryanX\PageTemplateUsage
  */
 
-namespace AryanX\TemplateUsageColumn\Tests\Unit;
+namespace AryanX\PageTemplateUsage\Tests\Unit;
 
 use Brain\Monkey;
 use Brain\Monkey\Functions;

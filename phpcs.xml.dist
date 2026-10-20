@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<ruleset name="Template Usage Column">
-	<description>WordPress coding standards for Template Usage Column.</description>
+<ruleset name="Page Template Usage">
+	<description>WordPress coding standards for Page Template Usage.</description>
 
 	<file>.</file>
 	<exclude-pattern>/vendor/*</exclude-pattern>
@@ -24,7 +24,7 @@
 	<rule ref="WordPress.WP.I18n">
 		<properties>
 			<property name="text_domain" type="array">
-				<element value="template-usage-column"/>
+				<element value="page-template-usage"/>
 			</property>
 		</properties>
 	</rule>
@@ -32,8 +32,8 @@
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
 		<properties>
 			<property name="prefixes" type="array">
-				<element value="AryanX\TemplateUsageColumn"/>
-				<element value="template_usage_column"/>
+				<element value="AryanX\PageTemplateUsage"/>
+				<element value="page_template_usage"/>
 			</property>
 		</properties>
 	</rule>

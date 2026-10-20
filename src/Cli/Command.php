@@ -1,13 +1,13 @@
 <?php
 /**
- * `wp template-usage` commands.
+ * `wp page-template-usage` commands.
  *
- * @package AryanX\TemplateUsageColumn
+ * @package AryanX\PageTemplateUsage
  */
 
-namespace AryanX\TemplateUsageColumn\Cli;
+namespace AryanX\PageTemplateUsage\Cli;
 
-use AryanX\TemplateUsageColumn\Templates;
+use AryanX\PageTemplateUsage\Templates;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -51,8 +51,8 @@ final class Command {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     wp template-usage list
-	 *     wp template-usage list --status=missing --format=csv
+	 *     wp page-template-usage list
+	 *     wp page-template-usage list --status=missing --format=csv
 	 *
 	 * @subcommand list
 	 *
@@ -94,8 +94,8 @@ final class Command {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *     wp template-usage reassign missing default
-	 *     wp template-usage reassign templates/full-width.php page-wide
+	 *     wp page-template-usage reassign missing default
+	 *     wp page-template-usage reassign templates/full-width.php page-wide
 	 *
 	 * @param array $args       Positional arguments.
 	 * @param array $assoc_args Named arguments.

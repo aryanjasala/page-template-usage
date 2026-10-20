@@ -1,19 +1,19 @@
 <p align="center"><img src=".wordpress-org/icon-256x256.png" alt="" width="88"></p>
 
-<h1 align="center">Template Usage Column</h1>
+<h1 align="center">Page Template Usage</h1>
 
 <p align="center">
-  <a href="https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/aryanjasala/template-usage-column/main/blueprint.json"><img src="https://img.shields.io/badge/Try%20in-WordPress%20Playground-3858e9?logo=wordpress&logoColor=white" alt="Try in WordPress Playground"></a>
-  <a href="https://github.com/aryanjasala/template-usage-column/releases/latest"><img src="https://img.shields.io/github/v/release/aryanjasala/template-usage-column?label=release&color=2271b1" alt="Latest release"></a>
+  <a href="https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/aryanjasala/page-template-usage/main/blueprint.json"><img src="https://img.shields.io/badge/Try%20in-WordPress%20Playground-3858e9?logo=wordpress&logoColor=white" alt="Try in WordPress Playground"></a>
+  <a href="https://github.com/aryanjasala/page-template-usage/releases/latest"><img src="https://img.shields.io/github/v/release/aryanjasala/page-template-usage?label=release&color=2271b1" alt="Latest release"></a>
   <img src="https://img.shields.io/badge/WordPress-6.6%2B-3858e9?logo=wordpress&logoColor=white" alt="WordPress 6.6+">
   <img src="https://img.shields.io/badge/PHP-7.4%2B-777bb4?logo=php&logoColor=white" alt="PHP 7.4+">
   <a href="LICENSE.md"><img src="https://img.shields.io/badge/license-GPL--2.0--or--later-blue" alt="License: GPL-2.0-or-later"></a>
   <br>
-  <a href="https://github.com/aryanjasala/template-usage-column/actions/workflows/phpcs.yml"><img src="https://github.com/aryanjasala/template-usage-column/actions/workflows/phpcs.yml/badge.svg" alt="PHPCS"></a>
-  <a href="https://github.com/aryanjasala/template-usage-column/actions/workflows/phpstan.yml"><img src="https://github.com/aryanjasala/template-usage-column/actions/workflows/phpstan.yml/badge.svg" alt="PHPStan"></a>
-  <a href="https://github.com/aryanjasala/template-usage-column/actions/workflows/unit-tests.yml"><img src="https://github.com/aryanjasala/template-usage-column/actions/workflows/unit-tests.yml/badge.svg" alt="Unit tests"></a>
-  <a href="https://github.com/aryanjasala/template-usage-column/actions/workflows/e2e-tests.yml"><img src="https://github.com/aryanjasala/template-usage-column/actions/workflows/e2e-tests.yml/badge.svg" alt="E2E tests"></a>
-  <a href="https://github.com/aryanjasala/template-usage-column/actions/workflows/plugin-check.yml"><img src="https://github.com/aryanjasala/template-usage-column/actions/workflows/plugin-check.yml/badge.svg" alt="Plugin Check"></a>
+  <a href="https://github.com/aryanjasala/page-template-usage/actions/workflows/phpcs.yml"><img src="https://github.com/aryanjasala/page-template-usage/actions/workflows/phpcs.yml/badge.svg" alt="PHPCS"></a>
+  <a href="https://github.com/aryanjasala/page-template-usage/actions/workflows/phpstan.yml"><img src="https://github.com/aryanjasala/page-template-usage/actions/workflows/phpstan.yml/badge.svg" alt="PHPStan"></a>
+  <a href="https://github.com/aryanjasala/page-template-usage/actions/workflows/unit-tests.yml"><img src="https://github.com/aryanjasala/page-template-usage/actions/workflows/unit-tests.yml/badge.svg" alt="Unit tests"></a>
+  <a href="https://github.com/aryanjasala/page-template-usage/actions/workflows/e2e-tests.yml"><img src="https://github.com/aryanjasala/page-template-usage/actions/workflows/e2e-tests.yml/badge.svg" alt="E2E tests"></a>
+  <a href="https://github.com/aryanjasala/page-template-usage/actions/workflows/plugin-check.yml"><img src="https://github.com/aryanjasala/page-template-usage/actions/workflows/plugin-check.yml/badge.svg" alt="Plugin Check"></a>
 </p>
 
 <p align="center">See which template every page uses, and find the ones pointing at templates that no longer exist.</p>
@@ -24,7 +24,7 @@
 
 ---
 
-WordPress lets you pick a template for each page but never shows which one is in use. After a theme switch, or a renamed or deleted template file, pages silently fall back to the default template. Template Usage Column puts the template on the Pages list, counts how many pages use each one, and moves pages off a template in one click.
+WordPress lets you pick a template for each page but never shows which one is in use. After a theme switch, or a renamed or deleted template file, pages silently fall back to the default template. Page Template Usage puts the template on the Pages list, counts how many pages use each one, and moves pages off a template in one click.
 
 > [!NOTE]
 > Free and open source under the GPL. No pro version, no upsells, no ads in wp-admin, no tracking. And it stays that way.
@@ -35,19 +35,19 @@ WordPress lets you pick a template for each page but never shows which one is in
 - **Filter with counts**: every template the theme offers and how many pages use it, so 0 means unused
 - **Sort** the list by template
 - **Missing templates** flagged in red, with a notice above the list
-- **Appearance > Template Usage**: every template on one screen, with a one-click **Move everything to** for each
+- **Appearance > Page Template Usage**: every template on one screen, with a one-click **Move everything to** for each
 - Classic themes (PHP templates, `Template Post Type`) and block themes (`theme.json` and Site Editor templates)
 - No settings, nothing stored in the database
 
 ## Install
 
-1. Download `template-usage-column.zip` from the [latest release](https://github.com/aryanjasala/template-usage-column/releases/latest).
+1. Download `page-template-usage.zip` from the [latest release](https://github.com/aryanjasala/page-template-usage/releases/latest).
 2. In WordPress, go to **Plugins > Add New Plugin > Upload Plugin**, choose the zip and activate it.
 
 Or with WP-CLI:
 
 ```sh
-wp plugin install https://github.com/aryanjasala/template-usage-column/releases/latest/download/template-usage-column.zip --activate
+wp plugin install https://github.com/aryanjasala/page-template-usage/releases/latest/download/page-template-usage.zip --activate
 ```
 
 Needs WordPress 6.6+ and PHP 7.4+. To try it first, the **Try in WordPress Playground** badge opens a throwaway WordPress in your browser with the plugin and some demo content.
@@ -57,8 +57,8 @@ Needs WordPress 6.6+ and PHP 7.4+. To try it first, the **Try in WordPress Playg
 Find every page on a template the theme no longer has, then move them all to the default template:
 
 ```sh
-wp template-usage list --status=missing
-wp template-usage reassign missing default
+wp page-template-usage list --status=missing
+wp page-template-usage reassign missing default
 ```
 
 ## Screenshots
@@ -69,7 +69,7 @@ wp template-usage reassign missing default
     <td width="50%" valign="top"><img src=".wordpress-org/screenshot-2.png" alt="A page whose template no longer exists"><br><sub>A page whose template no longer exists</sub></td>
   </tr>
   <tr>
-    <td width="50%" valign="top"><img src=".wordpress-org/screenshot-3.png" alt="Appearance > Template Usage"><br><sub>Appearance > Template Usage</sub></td>
+    <td width="50%" valign="top"><img src=".wordpress-org/screenshot-3.png" alt="Appearance > Page Template Usage"><br><sub>Appearance > Page Template Usage</sub></td>
   </tr>
 </table>
 
@@ -87,14 +87,14 @@ wp template-usage reassign missing default
 ## Project structure
 
 ```
-template-usage-column.php    plugin header and PSR-4 autoloader
+page-template-usage.php    plugin header and PSR-4 autoloader
 src/
 ├── Plugin.php               creates the services
 ├── Templates.php            templates, usage counts, reassigning
 ├── Admin/
 │   ├── ListColumn.php       column, filter, sorting, missing-template notice
-│   └── ReportPage.php       Appearance > Template Usage
-└── Cli/Command.php          wp template-usage
+│   └── ReportPage.php       Appearance > Page Template Usage
+└── Cli/Command.php          wp page-template-usage
 assets/admin.css
 tests/
 ├── Unit/                    PHPUnit
@@ -110,9 +110,9 @@ Small plugins that each fill one gap in WordPress, all free with no pro version:
 | | Plugin | What it does |
 | --- | --- | --- |
 | <img src="https://raw.githubusercontent.com/aryanjasala/staging-guard/main/.wordpress-org/icon-128x128.png" alt="" width="32"> | [Staging Guard](https://github.com/aryanjasala/staging-guard) | Stops staging copies from emailing real people or getting indexed |
-| <img src="https://raw.githubusercontent.com/aryanjasala/term-trash/main/.wordpress-org/icon-128x128.png" alt="" width="32"> | [Term Trash](https://github.com/aryanjasala/term-trash) | A trash for categories, tags and custom terms, with undo and full restore |
-| <img src="https://raw.githubusercontent.com/aryanjasala/deploy-freeze/main/.wordpress-org/icon-128x128.png" alt="" width="32"> | [Deploy Freeze](https://github.com/aryanjasala/deploy-freeze) | Read-only mode for WordPress during migrations and deploys |
-| <img src="https://raw.githubusercontent.com/aryanjasala/restore-one-block/main/.wordpress-org/icon-128x128.png" alt="" width="32"> | [Restore One Block](https://github.com/aryanjasala/restore-one-block) | Restore a single block from an old revision, not the whole post |
+| <img src="https://raw.githubusercontent.com/aryanjasala/category-tag-trash/main/.wordpress-org/icon-128x128.png" alt="" width="32"> | [Category & Tag Trash](https://github.com/aryanjasala/category-tag-trash) | A trash for categories, tags and custom terms, with undo and full restore |
+| <img src="https://raw.githubusercontent.com/aryanjasala/site-read-only-mode/main/.wordpress-org/icon-128x128.png" alt="" width="32"> | [Site Read-Only Mode](https://github.com/aryanjasala/site-read-only-mode) | Read-only mode for WordPress during migrations and deploys |
+| <img src="https://raw.githubusercontent.com/aryanjasala/restore-blocks-from-revisions/main/.wordpress-org/icon-128x128.png" alt="" width="32"> | [Restore Blocks from Revisions](https://github.com/aryanjasala/restore-blocks-from-revisions) | Restore a single block from an old revision, not the whole post |
 
 ## License
 

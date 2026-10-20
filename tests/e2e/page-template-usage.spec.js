@@ -4,7 +4,7 @@ const { test, expect, wp, wpEval } = require( './utils' );
 const NO_TITLE = 'page-no-title';
 const GONE = 'templates/retired-landing.php';
 
-test.describe( 'Template Usage Column', () => {
+test.describe( 'Page Template Usage', () => {
 	const ids = {};
 
 	test.beforeAll( () => {
@@ -16,10 +16,10 @@ test.describe( 'Template Usage Column', () => {
 			return Number( id );
 		};
 
-		ids.plain = create( 'TUC Plain page' );
-		ids.noTitle = create( 'TUC No title page', NO_TITLE );
-		ids.noTitleDraft = create( 'TUC No title draft', NO_TITLE, 'draft' );
-		ids.gone = create( 'TUC Retired landing', GONE );
+		ids.plain = create( 'PTU Plain page' );
+		ids.noTitle = create( 'PTU No title page', NO_TITLE );
+		ids.noTitleDraft = create( 'PTU No title draft', NO_TITLE, 'draft' );
+		ids.gone = create( 'PTU Retired landing', GONE );
 	} );
 
 	test.afterAll( () => {
@@ -29,15 +29,15 @@ test.describe( 'Template Usage Column', () => {
 	test( 'shows the template of every page, with missing templates flagged', async ( { page } ) => {
 		await page.goto( '/wp-admin/edit.php?post_type=page' );
 
-		const row = ( id ) => page.locator( `#post-${ id } .column-template_usage` );
+		const row = ( id ) => page.locator( `#post-${ id } .column-page_template_usage` );
 		await expect( page.getByRole( 'columnheader', { name: /Template/ } ).first() ).toBeVisible();
 		await expect( row( ids.plain ) ).toHaveText( 'Default' );
 		await expect( row( ids.noTitle ) ).toHaveText( 'Page No Title' );
 		await expect( row( ids.gone ) ).toContainText( 'Missing template' );
-		await expect( row( ids.gone ).locator( '.tuc-missing' ) ).toHaveCSS( 'color', 'rgb(179, 45, 46)' );
+		await expect( row( ids.gone ).locator( '.ptu-missing' ) ).toHaveCSS( 'color', 'rgb(179, 45, 46)' );
 		await expect( row( ids.gone ) ).toContainText( GONE );
-		await expect( page.locator( '.tuc-missing-notice' ) ).toContainText( '1 page uses a template the theme no longer has' );
-		await expect( page.locator( '.tuc-missing-notice' ).getByRole( 'link', { name: 'Fix in Template Usage' } ) ).toHaveAttribute( 'href', /page=template-usage/ );
+		await expect( page.locator( '.ptu-missing-notice' ) ).toContainText( '1 page uses a template the theme no longer has' );
+		await expect( page.locator( '.ptu-missing-notice' ).getByRole( 'link', { name: 'Fix in Page Template Usage' } ) ).toHaveAttribute( 'href', /page=page-template-usage/ );
 	} );
 
 	test( 'filters the list by template, with counts in the dropdown', async ( { page } ) => {
@@ -49,21 +49,21 @@ test.describe( 'Template Usage Column', () => {
 
 		await page.locator( '#filter-by-template' ).selectOption( NO_TITLE );
 		await page.locator( '#post-query-submit' ).click();
-		await expect( page.locator( '#the-list .row-title' ) ).toHaveText( [ 'TUC No title draft', 'TUC No title page' ] );
+		await expect( page.locator( '#the-list .row-title' ) ).toHaveText( [ 'PTU No title draft', 'PTU No title page' ] );
 
-		await page.goto( '/wp-admin/edit.php?post_type=page&template_usage=__missing' );
-		await expect( page.locator( '#the-list .row-title' ) ).toHaveText( [ 'TUC Retired landing' ] );
+		await page.goto( '/wp-admin/edit.php?post_type=page&page_template_usage=__missing' );
+		await expect( page.locator( '#the-list .row-title' ) ).toHaveText( [ 'PTU Retired landing' ] );
 	} );
 
 	test( 'clicking the column heading sorts by template and keeps every page', async ( { page } ) => {
 		await page.goto( '/wp-admin/edit.php?post_type=page' );
 		const total = await page.locator( '#the-list tr' ).count();
 
-		await page.locator( 'th#template_usage a' ).click();
-		await expect( page ).toHaveURL( /orderby=template_usage/ );
+		await page.locator( 'th#page_template_usage a' ).click();
+		await expect( page ).toHaveURL( /orderby=page_template_usage/ );
 		await expect( page.locator( '#the-list tr' ) ).toHaveCount( total );
 
-		const cells = await page.locator( '#the-list .column-template_usage' ).allInnerTexts();
+		const cells = await page.locator( '#the-list .column-page_template_usage' ).allInnerTexts();
 		const firstNoTitle = cells.findIndex( ( text ) => text.includes( 'Page No Title' ) );
 		const lastDefault = cells.map( ( text ) => text.trim() ).lastIndexOf( 'Default' );
 		expect( firstNoTitle ).toBeGreaterThan( lastDefault );
@@ -78,17 +78,17 @@ test.describe( 'Template Usage Column', () => {
 		await page.locator( `#edit-${ ids.plain } select[name="page_template"]` ).selectOption( NO_TITLE );
 		await page.locator( `#edit-${ ids.plain } .save` ).click();
 
-		await expect( page.locator( `#post-${ ids.plain } .column-template_usage` ) ).toHaveText( 'Page No Title' );
+		await expect( page.locator( `#post-${ ids.plain } .column-page_template_usage` ) ).toHaveText( 'Page No Title' );
 		wp( 'post', 'meta', 'update', String( ids.plain ), '_wp_page_template', 'default' );
 	} );
 
 	test( 'report lists used, unused and missing templates and moves pages off a missing one', async ( { page } ) => {
-		await page.goto( '/wp-admin/themes.php?page=template-usage' );
+		await page.goto( '/wp-admin/themes.php?page=page-template-usage' );
 
-		const section = page.locator( '.tuc-report__section', { has: page.getByRole( 'heading', { name: 'Pages' } ) } );
-		await expect( section.locator( `tr[data-template="${ NO_TITLE }"] .tuc-badge` ) ).toHaveText( 'In use' );
-		await expect( section.locator( `tr[data-template="${ GONE }"] .tuc-badge` ) ).toHaveText( 'Missing' );
-		await expect( section.locator( '.tuc-stats li.is-error' ) ).toContainText( '1' );
+		const section = page.locator( '.ptu-report__section', { has: page.getByRole( 'heading', { name: 'Pages' } ) } );
+		await expect( section.locator( `tr[data-template="${ NO_TITLE }"] .ptu-badge` ) ).toHaveText( 'In use' );
+		await expect( section.locator( `tr[data-template="${ GONE }"] .ptu-badge` ) ).toHaveText( 'Missing' );
+		await expect( section.locator( '.ptu-stats li.is-error' ) ).toContainText( '1' );
 
 		const missingRow = section.locator( `tr[data-template="${ GONE }"]` );
 		await missingRow.locator( 'select[name="to"]' ).selectOption( NO_TITLE );
@@ -125,8 +125,8 @@ test.describe( 'Template Usage Column', () => {
 			` )
 		);
 
-		await page.goto( '/wp-admin/themes.php?page=template-usage' );
-		const section = page.locator( '.tuc-report__section', { has: page.getByRole( 'heading', { name: 'Pages' } ) } );
+		await page.goto( '/wp-admin/themes.php?page=page-template-usage' );
+		const section = page.locator( '.ptu-report__section', { has: page.getByRole( 'heading', { name: 'Pages' } ) } );
 		const row = section.locator( 'tr[data-template="templates/bulk-gone.php"]' );
 		await expect( row ).toContainText( '620' );
 		await row.locator( 'select[name="to"]' ).selectOption( NO_TITLE );
@@ -147,12 +147,12 @@ test.describe( 'Template Usage Column', () => {
 
 	test( 'abilities: an agent can read the report and move items off a missing template', async ( { rest } ) => {
 		wp( 'post', 'meta', 'update', String( ids.gone ), '_wp_page_template', GONE );
-		const path = ( name ) => `/wp-abilities/v1/abilities/template-usage-column/${ name }/run`;
+		const path = ( name ) => `/wp-abilities/v1/abilities/page-template-usage/${ name }/run`;
 
-		const listed = await rest( 'GET', '/wp-abilities/v1/abilities?category=template-usage-column' );
-		expect( listed.body.map( ( ability ) => ability.name ).sort() ).toEqual( [ 'template-usage-column/get-report', 'template-usage-column/reassign' ] );
+		const listed = await rest( 'GET', '/wp-abilities/v1/abilities?category=page-template-usage' );
+		expect( listed.body.map( ( ability ) => ability.name ).sort() ).toEqual( [ 'page-template-usage/get-report', 'page-template-usage/reassign' ] );
 		// MCP clients only list abilities marked public.
-		expect( JSON.parse( wpEval( `echo wp_json_encode( array_values( array_filter( array_map( function ( $ability ) { $meta = $ability->get_meta(); return ( ! empty( $meta['public'] ) && ! empty( $meta['mcp']['public'] ) ) ? '' : $ability->get_name(); }, wp_get_abilities() ), function ( $name ) { return 0 === strpos( $name, 'template-usage-column/' ); } ) ) );` ) ) ).toEqual( [] );
+		expect( JSON.parse( wpEval( `echo wp_json_encode( array_values( array_filter( array_map( function ( $ability ) { $meta = $ability->get_meta(); return ( ! empty( $meta['public'] ) && ! empty( $meta['mcp']['public'] ) ) ? '' : $ability->get_name(); }, wp_get_abilities() ), function ( $name ) { return 0 === strpos( $name, 'page-template-usage/' ); } ) ) );` ) ) ).toEqual( [] );
 
 		const report = await rest( 'GET', path( 'get-report' ) );
 		expect( report.status ).toBe( 200 );
@@ -166,16 +166,16 @@ test.describe( 'Template Usage Column', () => {
 		expect( ( await rest( 'GET', path( 'get-report' ) ) ).body.missing ).toBe( 0 );
 
 		const unknown = await rest( 'GET', `${ path( 'get-report' ) }?input[post_type]=nope` );
-		expect( unknown.body.code ).toBe( 'template_usage_no_templates' );
+		expect( unknown.body.code ).toBe( 'page_template_usage_no_templates' );
 	} );
 
 	test( 'WP-CLI lists usage and reassigns', () => {
 		wp( 'post', 'meta', 'update', String( ids.gone ), '_wp_page_template', GONE );
 
-		const missing = JSON.parse( wp( 'template-usage', 'list', '--post_type=page', '--status=missing', '--format=json' ) );
+		const missing = JSON.parse( wp( 'page-template-usage', 'list', '--post_type=page', '--status=missing', '--format=json' ) );
 		expect( missing ).toEqual( [ expect.objectContaining( { slug: GONE, count: 1, status: 'missing' } ) ] );
 
-		expect( wp( 'template-usage', 'reassign', 'missing', 'default' ) ).toContain( 'Moved 1 item(s)' );
-		expect( wp( 'template-usage', 'list', '--status=missing', '--format=count' ) ).toBe( '0' );
+		expect( wp( 'page-template-usage', 'reassign', 'missing', 'default' ) ).toContain( 'Moved 1 item(s)' );
+		expect( wp( 'page-template-usage', 'list', '--status=missing', '--format=count' ) ).toBe( '0' );
 	} );
 } );

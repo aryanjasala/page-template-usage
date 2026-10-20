@@ -2,14 +2,14 @@
 /**
  * Plugin bootstrap.
  *
- * @package AryanX\TemplateUsageColumn
+ * @package AryanX\PageTemplateUsage
  */
 
-namespace AryanX\TemplateUsageColumn;
+namespace AryanX\PageTemplateUsage;
 
-use AryanX\TemplateUsageColumn\Admin\ListColumn;
-use AryanX\TemplateUsageColumn\Admin\ReportPage;
-use AryanX\TemplateUsageColumn\Cli\Command;
+use AryanX\PageTemplateUsage\Admin\ListColumn;
+use AryanX\PageTemplateUsage\Admin\ReportPage;
+use AryanX\PageTemplateUsage\Cli\Command;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -89,7 +89,7 @@ final class Plugin {
 		}
 
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
-			\WP_CLI::add_command( 'template-usage', new Command( $this->templates ) );
+			\WP_CLI::add_command( 'page-template-usage', new Command( $this->templates ) );
 		}
 	}
 }

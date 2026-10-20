@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name:       Template Usage Column
- * Plugin URI:        https://wordpress.org/plugins/template-usage-column/
+ * Plugin Name:       Page Template Usage
+ * Plugin URI:        https://wordpress.org/plugins/page-template-usage/
  * Description:       Shows which template each page uses, lets you filter and sort by template, and finds pages whose template no longer exists. Works with classic and block themes.
  * Version:           1.3.0
  * Requires at least: 6.6
@@ -10,19 +10,19 @@
  * Author URI:        https://profiles.wordpress.org/aryanjasala/
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       template-usage-column
+ * Text Domain:       page-template-usage
  *
- * @package AryanX\TemplateUsageColumn
+ * @package AryanX\PageTemplateUsage
  */
 
-namespace AryanX\TemplateUsageColumn;
+namespace AryanX\PageTemplateUsage;
 
 defined( 'ABSPATH' ) || exit;
 
 const VERSION     = '1.3.0';
 const PLUGIN_FILE = __FILE__;
 
-// PSR-4: AryanX\TemplateUsageColumn\Foo\Bar lives in src/Foo/Bar.php.
+// PSR-4: AryanX\PageTemplateUsage\Foo\Bar lives in src/Foo/Bar.php.
 spl_autoload_register(
 	static function ( $class_name ) {
 		$prefix = __NAMESPACE__ . '\\';

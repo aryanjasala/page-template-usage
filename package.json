@@ -1,5 +1,5 @@
 {
-  "name": "template-usage-column",
+  "name": "page-template-usage",
   "private": true,
   "description": "Shows which template each page uses, with a filter, sorting and a usage report.",
   "license": "GPL-2.0-or-later",
