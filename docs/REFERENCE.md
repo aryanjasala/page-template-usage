@@ -32,7 +32,7 @@ The templates themselves come from core, so the core `theme_{$post_type}_templat
 
 ## Abilities
 
-On WordPress 6.9 and later, Template Usage Column registers [abilities](https://developer.wordpress.org/apis/abilities/), which AI agents find and run through the [MCP adapter](https://github.com/WordPress/mcp-adapter) and anything else through the REST API under `/wp-abilities/v1/`. Handy after a theme switch.
+On WordPress 6.9 and later, Template Usage Column registers [abilities](https://developer.wordpress.org/apis/abilities/), which AI agents find and run through the [MCP adapter](https://github.com/WordPress/mcp-adapter) and anything else through the REST API under `/wp-abilities/v1/`. Each one is marked public, which the MCP adapter needs before it lists an ability. Handy after a theme switch.
 
 | Ability | Does | Needs |
 | --- | --- | --- |
