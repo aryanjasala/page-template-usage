@@ -1,7 +1,7 @@
 const path = require( 'path' );
 
 module.exports = {
-	SLUG: 'template-usage-column',
+	SLUG: 'page-template-usage',
 	BASE_URL: process.env.WP_BASE_URL || 'http://localhost:8895',
 	// Test-only credentials for the throwaway Docker site.
 	USERNAME: process.env.WP_USERNAME || 'admin',

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# Builds dist/template-usage-column/ and dist/template-usage-column.zip from the working tree, leaving out
+# Builds dist/page-template-usage/ and dist/page-template-usage.zip from the working tree, leaving out
 # everything listed in .distignore. Used by the release and Plugin Check workflows.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-slug="template-usage-column"
+slug="page-template-usage"
 rm -rf dist
 mkdir -p "dist/$slug"
 rsync -a --exclude-from=.distignore ./ "dist/$slug/"

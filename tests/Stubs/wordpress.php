@@ -2,7 +2,7 @@
 /**
  * Minimal stand-ins for WordPress classes and constants used in unit tests.
  *
- * @package AryanX\TemplateUsageColumn
+ * @package AryanX\PageTemplateUsage
  */
 
 // phpcs:ignoreFile

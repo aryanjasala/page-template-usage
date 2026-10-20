@@ -2,10 +2,10 @@
 /**
  * Contract for classes that hook into WordPress.
  *
- * @package AryanX\TemplateUsageColumn
+ * @package AryanX\PageTemplateUsage
  */
 
-namespace AryanX\TemplateUsageColumn;
+namespace AryanX\PageTemplateUsage;
 
 defined( 'ABSPATH' ) || exit;
 

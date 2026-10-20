@@ -15,7 +15,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-slug="template-usage-column"
+slug="page-template-usage"
 main_file="$slug.php"
 
 header_version() {
