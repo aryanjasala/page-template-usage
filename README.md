@@ -1,3 +1,5 @@
+<p align="center"><img src=".wordpress-org/icon-256x256.png" alt="" width="88"></p>
+
 <h1 align="center">Template Usage Column</h1>
 
 <p align="center">
@@ -17,7 +19,7 @@
 <p align="center">See which template every page uses, and find the ones pointing at templates that no longer exist.</p>
 
 <p align="center">
-  <img src=".wordpress-org/screenshot-1.png" alt="The Template column and filter on the Pages screen" width="880">
+  <img src=".github/media/demo.gif" alt="Filtering the Pages list to the pages on a missing template, then moving them to another template from the report" width="880">
 </p>
 
 ---
@@ -60,7 +62,10 @@ wp template-usage reassign missing default
 
 <table>
   <tr>
+    <td width="50%" valign="top"><img src=".wordpress-org/screenshot-1.png" alt="The Template column and filter on the Pages screen"><br><sub>The Template column and filter on the Pages screen</sub></td>
     <td width="50%" valign="top"><img src=".wordpress-org/screenshot-2.png" alt="A page whose template no longer exists"><br><sub>A page whose template no longer exists</sub></td>
+  </tr>
+  <tr>
     <td width="50%" valign="top"><img src=".wordpress-org/screenshot-3.png" alt="Appearance > Template Usage"><br><sub>Appearance > Template Usage</sub></td>
   </tr>
 </table>

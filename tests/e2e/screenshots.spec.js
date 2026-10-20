@@ -1,15 +1,14 @@
 // Regenerates .wordpress-org/screenshot-N.png (readme.txt "== Screenshots ==" and README.md).
 // Run on demand: npm run screenshots
-const path = require( 'path' );
 const { test, expect, wp } = require( './utils' );
-
-const shot = ( page, number ) => page.screenshot( { path: path.join( __dirname, '..', '..', '.wordpress-org', `screenshot-${ number }.png` ) } );
+const { prepareSite, shot } = require( './utils/media' );
 
 test.describe( 'Screenshots', () => {
-	test.use( { viewport: { width: 1280, height: 760 } } );
+	test.use( { viewport: { width: 1280, height: 760 }, deviceScaleFactor: 2 } );
 	const ids = [];
 
 	test.beforeAll( () => {
+		prepareSite( 'Example Shop' );
 		for ( const [ title, template ] of [
 			[ 'Home', '' ],
 			[ 'About us', 'page-no-title' ],
