@@ -316,6 +316,16 @@ final class Templates implements Service {
 		$moved   = 0;
 		$skipped = array();
 
+		/**
+		 * Fires before items move from one template to another.
+		 *
+		 * @param string $post_type Post type.
+		 * @param string $from      Template they are on, DEFAULT_TEMPLATE or MISSING.
+		 * @param string $to        Template they move to.
+		 * @param int    $limit     Most items this run moves, 0 for all.
+		 */
+		do_action( 'template_usage_column_before_reassign', $post_type, $from, $value, $limit );
+
 		do {
 			$batch = $limit ? min( self::BATCH, $limit - $moved ) : self::BATCH;
 			// Moved posts no longer match, so every batch is the first page of what is left.

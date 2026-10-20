@@ -23,7 +23,12 @@ The Move button on Appearance > Template Usage moves at most 500 items per click
 | `template_usage_column_post_types` | filter | `( string[] $post_types )`. Post types to look at. Types without templates are left out on their own |
 | `template_usage_column_sortable` | filter | `( bool $sortable, string $post_type )`. Return `false` to turn off sorting by template, which joins postmeta and is slow on very large sites |
 | `template_usage_column_capability` | filter | `( string $capability )`. Who may open Appearance > Template Usage. Default `edit_pages` |
+| `template_usage_column_move_limit` | filter | `( int $limit, string $post_type )`. Items one Move click handles. Default 500 |
+| `template_usage_column_show_missing_notice` | filter | `( bool $show, string $post_type, int $missing )`. Whether the list screen warns about items on missing templates |
+| `template_usage_column_before_reassign` | action | `( string $post_type, string $from, string $to, int $limit )`. Fires before items move, from the screen or WP-CLI |
 | `template_usage_column_reassigned` | action | `( string $post_type, string $from, string $to, int[] $post_ids )`. Fires for every batch of items moved |
+
+The templates themselves come from core, so the core `theme_{$post_type}_templates` filter adds or removes them everywhere, including in this plugin.
 
 ## PHP API
 
