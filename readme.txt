@@ -4,7 +4,7 @@ Tags: page template, admin column, filter, block theme, templates
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -58,6 +58,10 @@ Yes, if your theme offers templates for posts. The column only appears on post t
 3. Appearance > Template Usage.
 
 == Changelog ==
+
+= 1.2.0 =
+* New: add filters for the move limit and the missing-template notice, and an action before a move
+* Fix: move templates in batches with a check per post, and keep the counts cached
 
 = 1.1.0 =
 * New: Appearance > Template Usage report with one-click "move everything to" another template.
