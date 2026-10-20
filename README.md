@@ -26,6 +26,9 @@
 
 WordPress lets you pick a template for each page but never shows which one is in use. After a theme switch, or a renamed or deleted template file, pages silently fall back to the default template. Template Usage Column puts the template on the Pages list, counts how many pages use each one, and moves pages off a template in one click.
 
+> [!NOTE]
+> Free and open source under the GPL. No pro version, no upsells, no ads in wp-admin, no tracking. And it stays that way.
+
 ## Features
 
 - **Template column** on Pages, and on any post type with templates, linked to everything else on that template
@@ -99,6 +102,17 @@ tests/
 .wordpress-org/              screenshots
 docs/                        reference, development, contributing, releasing
 ```
+
+## More free plugins
+
+Small plugins that each fill one gap in WordPress, all free with no pro version:
+
+| | Plugin | What it does |
+| --- | --- | --- |
+| <img src="https://raw.githubusercontent.com/aryanjasala/staging-guard/main/.wordpress-org/icon-128x128.png" alt="" width="32"> | [Staging Guard](https://github.com/aryanjasala/staging-guard) | Stops staging copies from emailing real people or getting indexed |
+| <img src="https://raw.githubusercontent.com/aryanjasala/term-trash/main/.wordpress-org/icon-128x128.png" alt="" width="32"> | [Term Trash](https://github.com/aryanjasala/term-trash) | A trash for categories, tags and custom terms, with undo and full restore |
+| <img src="https://raw.githubusercontent.com/aryanjasala/deploy-freeze/main/.wordpress-org/icon-128x128.png" alt="" width="32"> | [Deploy Freeze](https://github.com/aryanjasala/deploy-freeze) | Read-only mode for WordPress during migrations and deploys |
+| <img src="https://raw.githubusercontent.com/aryanjasala/restore-one-block/main/.wordpress-org/icon-128x128.png" alt="" width="32"> | [Restore One Block](https://github.com/aryanjasala/restore-one-block) | Restore a single block from an old revision, not the whole post |
 
 ## License
 
