@@ -86,16 +86,20 @@ final class ListColumn implements Service {
 			return;
 		}
 
+		if ( 'page' === $post_type->name ) {
+			/* translators: %s: number of pages. */
+			$message = _n( '%s page uses a template the theme no longer has, so it shows the default template.', '%s pages use a template the theme no longer has, so they show the default template.', $missing, 'template-usage-column' );
+		} elseif ( 'post' === $post_type->name ) {
+			/* translators: %s: number of posts. */
+			$message = _n( '%s post uses a template the theme no longer has, so it shows the default template.', '%s posts use a template the theme no longer has, so they show the default template.', $missing, 'template-usage-column' );
+		} else {
+			/* translators: %s: number of items. */
+			$message = _n( '%s item uses a template the theme no longer has, so it shows the default template.', '%s items use a template the theme no longer has, so they show the default template.', $missing, 'template-usage-column' );
+		}
+
 		printf(
 			'<div class="notice notice-warning tuc-missing-notice"><p>%s <a href="%s">%s</a> &middot; <a href="%s">%s</a></p></div>',
-			esc_html(
-				sprintf(
-					/* translators: 1: number of items, 2: post type name. */
-					_n( '%1$d %2$s uses a template the theme no longer has, so it shows the default template.', '%1$d %2$s use a template the theme no longer has, so they show the default template.', $missing, 'template-usage-column' ),
-					$missing,
-					strtolower( 1 === $missing ? $post_type->labels->singular_name : $post_type->labels->name )
-				)
-			),
+			esc_html( sprintf( $message, number_format_i18n( $missing ) ) ),
 			esc_url( $this->filter_url( $post_type->name, Templates::MISSING ) ),
 			esc_html__( 'Show them', 'template-usage-column' ),
 			esc_url( admin_url( 'themes.php?page=' . ReportPage::SLUG ) ),
@@ -149,7 +153,20 @@ final class ListColumn implements Service {
 	 * @return array<string, string>
 	 */
 	public function make_sortable( array $columns ): array {
-		$columns[ self::COLUMN ] = self::COLUMN;
+		$screen = get_current_screen();
+
+		/**
+		 * Filters whether the Template column can sort the list.
+		 *
+		 * Sorting joins postmeta, which is slow on very large sites. Return
+		 * false there to keep the column and the filter without sorting.
+		 *
+		 * @param bool   $sortable  Default true.
+		 * @param string $post_type Post type of the list.
+		 */
+		if ( apply_filters( 'template_usage_column_sortable', true, $screen ? (string) $screen->post_type : '' ) ) {
+			$columns[ self::COLUMN ] = self::COLUMN;
+		}
 
 		return $columns;
 	}

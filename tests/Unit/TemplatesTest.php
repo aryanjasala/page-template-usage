@@ -106,18 +106,61 @@ final class TemplatesTest extends TestCase {
 		$this->assertSame( 'template_usage_unknown_template', $result->get_error_code() );
 	}
 
+	/**
+	 * Queues what reassign() will find: batches of IDs, then the count left.
+	 *
+	 * @param int[][] $batches Post IDs per batch.
+	 * @param int     $left    Posts still on the template afterwards.
+	 */
+	private function queue( array $batches, int $left = 0 ): void {
+		Functions\when( 'wp_parse_id_list' )->alias(
+			static function ( $ids ) {
+				return array_map( 'intval', (array) $ids );
+			}
+		);
+		Functions\when( 'wp_cache_delete' )->justReturn( true );
+		foreach ( $batches as $ids ) {
+			\WP_Query::$queue[] = array( 'posts' => $ids );
+		}
+		\WP_Query::$queue[] = array( 'found_posts' => $left );
+	}
+
 	public function test_reassign_moves_every_matching_post(): void {
-		Functions\expect( 'get_posts' )->once()->andReturn( array( 11, 12 ) );
+		$this->queue( array( array( 11, 12 ), array() ) );
 		Functions\expect( 'update_post_meta' )->twice()->with( Mockery::anyOf( 11, 12 ), '_wp_page_template', 'page-wide' );
 
-		$this->assertSame( 2, $this->templates->reassign( 'page', Templates::MISSING, 'page-wide' ) );
+		$this->assertSame(
+			array(
+				'moved'     => 2,
+				'skipped'   => 0,
+				'remaining' => 0,
+			),
+			$this->templates->reassign( 'page', Templates::MISSING, 'page-wide' )
+		);
 	}
 
 	public function test_reassign_to_default_stores_the_default_value(): void {
-		Functions\expect( 'get_posts' )->once()->andReturn( array( 7 ) );
+		$this->queue( array( array( 7 ), array() ) );
 		Functions\expect( 'update_post_meta' )->once()->with( 7, '_wp_page_template', 'default' );
 
-		$this->assertSame( 1, $this->templates->reassign( 'page', 'page-wide', '' ) );
+		$this->assertSame( 1, $this->templates->reassign( 'page', 'page-wide', '' )['moved'] );
+	}
+
+	public function test_reassign_stops_at_the_limit_and_skips_posts_the_user_cannot_edit(): void {
+		$this->queue( array( array( 1, 2, 3 ), array( 2, 4, 5 ) ), 4 );
+		Functions\when( 'current_user_can' )->alias(
+			static function ( $capability, $post_id ) {
+				return 2 !== $post_id;
+			}
+		);
+		Functions\expect( 'update_post_meta' )->times( 4 );
+
+		$result = $this->templates->reassign( 'page', Templates::MISSING, 'page-wide', 4, true );
+
+		$this->assertSame( 4, $result['moved'] );
+		$this->assertSame( 1, $result['skipped'] );
+		$this->assertSame( 3, $result['remaining'], 'The count left leaves out the skipped post.' );
+		$this->assertSame( 3, \WP_Query::$made[1]['posts_per_page'], 'The next batch asks for one more, to make up for the skipped post.' );
 	}
 
 	public function test_column_is_added_right_after_the_title(): void {
