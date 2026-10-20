@@ -146,6 +146,7 @@ test.describe( 'Page Template Usage', () => {
 	} );
 
 	test( 'abilities: an agent can read the report and move items off a missing template', async ( { rest } ) => {
+		test.skip( 'yes' !== wpEval( "echo function_exists( 'wp_register_ability' ) ? 'yes' : 'no';" ), 'The Abilities API needs WordPress 6.9.' );
 		wp( 'post', 'meta', 'update', String( ids.gone ), '_wp_page_template', GONE );
 		const path = ( name ) => `/wp-abilities/v1/abilities/page-template-usage/${ name }/run`;
 
