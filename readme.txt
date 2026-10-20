@@ -28,6 +28,8 @@ Works with:
 * Block themes (custom templates from `theme.json` and templates created in the Site Editor).
 * Any post type that has templates.
 
+Free and open source under the GPL. No pro version, no upsells, no ads in wp-admin, no tracking. And it stays that way.
+
 = WP-CLI =
 
 * `wp template-usage list` (add `--status=missing` to see only problems)
