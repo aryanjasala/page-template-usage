@@ -82,7 +82,15 @@ final class ListColumn implements Service {
 
 		$post_type = get_post_type_object( (string) $screen->post_type );
 		$missing   = array_sum( $this->templates->get_missing_counts( (string) $screen->post_type ) );
-		if ( ! $post_type || ! $missing ) {
+
+		/**
+		 * Filters whether the list screen warns about items on missing templates.
+		 *
+		 * @param bool   $show      Default true when any item is on a missing template.
+		 * @param string $post_type Post type of the list.
+		 * @param int    $missing   Items on missing templates.
+		 */
+		if ( ! $post_type || ! $missing || ! apply_filters( 'template_usage_column_show_missing_notice', true, $post_type->name, $missing ) ) {
 			return;
 		}
 

@@ -305,7 +305,14 @@ final class ReportPage implements Service {
 			wp_die( esc_html__( 'Sorry, you are not allowed to change templates for these items.', 'template-usage-column' ), 403 );
 		}
 
-		$result = $this->templates->reassign( $post_type, $from, $to, self::MOVE_LIMIT, true );
+		/**
+		 * Filters how many items one Move click handles.
+		 *
+		 * @param int    $limit     Default 500.
+		 * @param string $post_type Post type being moved.
+		 */
+		$limit  = max( 1, (int) apply_filters( 'template_usage_column_move_limit', self::MOVE_LIMIT, $post_type ) );
+		$result = $this->templates->reassign( $post_type, $from, $to, $limit, true );
 
 		if ( is_wp_error( $result ) ) {
 			wp_safe_redirect( add_query_arg( 'tuc_error', 'unknown_template', $back ) );

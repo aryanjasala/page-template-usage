@@ -9,6 +9,7 @@ namespace AryanX\TemplateUsageColumn\Tests\Unit;
 
 use AryanX\TemplateUsageColumn\Admin\ListColumn;
 use AryanX\TemplateUsageColumn\Templates;
+use Brain\Monkey\Actions;
 use Brain\Monkey\Functions;
 use Mockery;
 
@@ -127,6 +128,8 @@ final class TemplatesTest extends TestCase {
 
 	public function test_reassign_moves_every_matching_post(): void {
 		$this->queue( array( array( 11, 12 ), array() ) );
+		Actions\expectDone( 'template_usage_column_before_reassign' )->once()->with( 'page', Templates::MISSING, 'page-wide', 0 );
+		Actions\expectDone( 'template_usage_column_reassigned' )->once()->with( 'page', Templates::MISSING, 'page-wide', array( 11, 12 ) );
 		Functions\expect( 'update_post_meta' )->twice()->with( Mockery::anyOf( 11, 12 ), '_wp_page_template', 'page-wide' );
 
 		$this->assertSame(
