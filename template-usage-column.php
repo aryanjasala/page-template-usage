@@ -3,7 +3,7 @@
  * Plugin Name:       Template Usage Column
  * Plugin URI:        https://wordpress.org/plugins/template-usage-column/
  * Description:       Shows which template each page uses, lets you filter and sort by template, and finds pages whose template no longer exists. Works with classic and block themes.
- * Version:           1.2.0
+ * Version:           1.3.0
  * Requires at least: 6.6
  * Requires PHP:      7.4
  * Author:            Aryan Jasala
@@ -19,7 +19,7 @@ namespace AryanX\TemplateUsageColumn;
 
 defined( 'ABSPATH' ) || exit;
 
-const VERSION     = '1.2.0';
+const VERSION     = '1.3.0';
 const PLUGIN_FILE = __FILE__;
 
 // PSR-4: AryanX\TemplateUsageColumn\Foo\Bar lives in src/Foo/Bar.php.
