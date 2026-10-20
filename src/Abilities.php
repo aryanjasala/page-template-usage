@@ -123,6 +123,10 @@ final class Abilities implements Service {
 						'idempotent' => true,
 					),
 					'show_in_rest' => true,
+					// Clients such as the MCP adapter only list abilities marked public:
+					// `public` from WordPress 7.1, `mcp.public` for the adapter on 6.9 and 7.0.
+					'public'       => true,
+					'mcp'          => array( 'public' => true ),
 				),
 			)
 		);
@@ -166,6 +170,10 @@ final class Abilities implements Service {
 						'idempotent'  => false,
 					),
 					'show_in_rest' => true,
+					// Clients such as the MCP adapter only list abilities marked public:
+					// `public` from WordPress 7.1, `mcp.public` for the adapter on 6.9 and 7.0.
+					'public'       => true,
+					'mcp'          => array( 'public' => true ),
 				),
 			)
 		);

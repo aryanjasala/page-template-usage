@@ -151,6 +151,8 @@ test.describe( 'Template Usage Column', () => {
 
 		const listed = await rest( 'GET', '/wp-abilities/v1/abilities?category=template-usage-column' );
 		expect( listed.body.map( ( ability ) => ability.name ).sort() ).toEqual( [ 'template-usage-column/get-report', 'template-usage-column/reassign' ] );
+		// MCP clients only list abilities marked public.
+		expect( JSON.parse( wpEval( `echo wp_json_encode( array_values( array_filter( array_map( function ( $ability ) { $meta = $ability->get_meta(); return ( ! empty( $meta['public'] ) && ! empty( $meta['mcp']['public'] ) ) ? '' : $ability->get_name(); }, wp_get_abilities() ), function ( $name ) { return 0 === strpos( $name, 'template-usage-column/' ); } ) ) );` ) ) ).toEqual( [] );
 
 		const report = await rest( 'GET', path( 'get-report' ) );
 		expect( report.status ).toBe( 200 );
