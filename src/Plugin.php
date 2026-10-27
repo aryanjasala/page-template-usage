@@ -2,14 +2,14 @@
 /**
  * Plugin bootstrap.
  *
- * @package AryanX\PageTemplateUsage
+ * @package AryanX\Axle\PageTemplateUsage
  */
 
-namespace AryanX\PageTemplateUsage;
+namespace AryanX\Axle\PageTemplateUsage;
 
-use AryanX\PageTemplateUsage\Admin\ListColumn;
-use AryanX\PageTemplateUsage\Admin\ReportPage;
-use AryanX\PageTemplateUsage\Cli\Command;
+use AryanX\Axle\PageTemplateUsage\Admin\ListColumn;
+use AryanX\Axle\PageTemplateUsage\Admin\ReportPage;
+use AryanX\Axle\PageTemplateUsage\Cli\Command;
 
 defined( 'ABSPATH' ) || exit;
 

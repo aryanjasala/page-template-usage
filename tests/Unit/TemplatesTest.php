@@ -2,13 +2,13 @@
 /**
  * Tests for template choices, usage counts and reassigning.
  *
- * @package AryanX\PageTemplateUsage
+ * @package AryanX\Axle\PageTemplateUsage
  */
 
-namespace AryanX\PageTemplateUsage\Tests\Unit;
+namespace AryanX\Axle\PageTemplateUsage\Tests\Unit;
 
-use AryanX\PageTemplateUsage\Admin\ListColumn;
-use AryanX\PageTemplateUsage\Templates;
+use AryanX\Axle\PageTemplateUsage\Admin\ListColumn;
+use AryanX\Axle\PageTemplateUsage\Templates;
 use Brain\Monkey\Actions;
 use Brain\Monkey\Functions;
 use Mockery;

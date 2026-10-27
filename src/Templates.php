@@ -2,10 +2,10 @@
 /**
  * Template choices and usage counts.
  *
- * @package AryanX\PageTemplateUsage
+ * @package AryanX\Axle\PageTemplateUsage
  */
 
-namespace AryanX\PageTemplateUsage;
+namespace AryanX\Axle\PageTemplateUsage;
 
 defined( 'ABSPATH' ) || exit;
 
