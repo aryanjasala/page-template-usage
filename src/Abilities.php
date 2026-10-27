@@ -2,12 +2,12 @@
 /**
  * Abilities: template audits for AI agents and other Abilities API clients.
  *
- * @package AryanX\PageTemplateUsage
+ * @package AryanX\Axle\PageTemplateUsage
  */
 
-namespace AryanX\PageTemplateUsage;
+namespace AryanX\Axle\PageTemplateUsage;
 
-use AryanX\PageTemplateUsage\Admin\ReportPage;
+use AryanX\Axle\PageTemplateUsage\Admin\ReportPage;
 
 defined( 'ABSPATH' ) || exit;
 

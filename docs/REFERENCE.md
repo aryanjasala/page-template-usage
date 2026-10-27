@@ -42,7 +42,7 @@ On WordPress 6.9 and later, Page Template Usage registers [abilities](https://de
 ## PHP API
 
 ```php
-$templates = AryanX\PageTemplateUsage\Plugin::instance()->templates();
+$templates = AryanX\Axle\PageTemplateUsage\Plugin::instance()->templates();
 
 $templates->get_report( 'page' );                     // one row per template: slug, name, count, status
 $templates->get_missing_counts( 'page' );             // [ 'templates/old.php' => 3 ]

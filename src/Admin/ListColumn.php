@@ -2,15 +2,15 @@
 /**
  * Template column, filter and sorting on post list screens.
  *
- * @package AryanX\PageTemplateUsage
+ * @package AryanX\Axle\PageTemplateUsage
  */
 
-namespace AryanX\PageTemplateUsage\Admin;
+namespace AryanX\Axle\PageTemplateUsage\Admin;
 
-use AryanX\PageTemplateUsage\Service;
-use AryanX\PageTemplateUsage\Templates;
-use const AryanX\PageTemplateUsage\PLUGIN_FILE;
-use const AryanX\PageTemplateUsage\VERSION;
+use AryanX\Axle\PageTemplateUsage\Service;
+use AryanX\Axle\PageTemplateUsage\Templates;
+use const AryanX\Axle\PageTemplateUsage\PLUGIN_FILE;
+use const AryanX\Axle\PageTemplateUsage\VERSION;
 
 defined( 'ABSPATH' ) || exit;
 

@@ -2,12 +2,12 @@
 /**
  * `wp page-template-usage` commands.
  *
- * @package AryanX\PageTemplateUsage
+ * @package AryanX\Axle\PageTemplateUsage
  */
 
-namespace AryanX\PageTemplateUsage\Cli;
+namespace AryanX\Axle\PageTemplateUsage\Cli;
 
-use AryanX\PageTemplateUsage\Templates;
+use AryanX\Axle\PageTemplateUsage\Templates;
 
 defined( 'ABSPATH' ) || exit;
 

@@ -25,12 +25,12 @@
   },
   "autoload": {
     "psr-4": {
-      "AryanX\\PageTemplateUsage\\": "src/"
+      "AryanX\\Axle\\PageTemplateUsage\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "AryanX\\PageTemplateUsage\\Tests\\": "tests/"
+      "AryanX\\Axle\\PageTemplateUsage\\Tests\\": "tests/"
     }
   },
   "config": {
