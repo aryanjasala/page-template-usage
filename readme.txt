@@ -37,6 +37,10 @@ Free and open source under the GPL. No pro version, no upsells, no ads in wp-adm
 
 No settings and nothing stored in the database. Deactivate it and it is gone.
 
+**Try it before you install.** [try.axlewp.com/page-template-usage](https://try.axlewp.com/page-template-usage) opens a private WordPress in your browser with this plugin and some demo content.
+
+Part of [Axle](https://axlewp.com/), a family of free plugins for running WordPress sites safely.
+
 == Frequently Asked Questions ==
 
 = Why does a page show "Missing template"? =
